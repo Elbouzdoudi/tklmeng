@@ -57,6 +57,21 @@ body {
   animation: elegantGlow 2s ease-in-out infinite;
 }
 
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -199,6 +214,7 @@ body {
   font-family: var(--font-arabic), system-ui, -apple-system, sans-serif;
 }
 
+/* Base RTL text alignment */
 [dir="rtl"] {
   text-align: right;
 }
@@ -211,46 +227,68 @@ body {
   text-align: left;
 }
 
+[dir="rtl"] .text-center {
+  text-align: center;
+}
+
+/* RTL: Reverse flex row direction */
+[dir="rtl"] .rtl\:flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
 /* Flip directional icons in RTL */
 [dir="rtl"] .rtl-flip {
   transform: scaleX(-1);
 }
 
-/* Adjust flexbox direction for RTL */
-[dir="rtl"] .flex-row {
-  flex-direction: row-reverse;
+/* RTL: Fix grid layout */
+[dir="rtl"] .md\:grid-cols-2 > *:first-child {
+  order: 2;
+}
+
+[dir="rtl"] .md\:grid-cols-2 > *:last-child {
+  order: 1;
 }
 
 [dir="rtl"] .lg\:text-left {
   text-align: right;
 }
 
-/* RTL-specific margins and paddings */
-[dir="rtl"] .ml-1 { margin-left: 0; margin-right: 0.25rem; }
-[dir="rtl"] .ml-2 { margin-left: 0; margin-right: 0.5rem; }
-[dir="rtl"] .ml-3 { margin-left: 0; margin-right: 0.75rem; }
-[dir="rtl"] .ml-4 { margin-left: 0; margin-right: 1rem; }
-[dir="rtl"] .mr-1 { margin-right: 0; margin-left: 0.25rem; }
-[dir="rtl"] .mr-2 { margin-right: 0; margin-left: 0.5rem; }
-[dir="rtl"] .mr-3 { margin-right: 0; margin-left: 0.75rem; }
-[dir="rtl"] .mr-4 { margin-right: 0; margin-left: 1rem; }
+/* RTL: Gap utilities work automatically */
 
-[dir="rtl"] .pl-1 { padding-left: 0; padding-right: 0.25rem; }
-[dir="rtl"] .pl-2 { padding-left: 0; padding-right: 0.5rem; }
-[dir="rtl"] .pl-3 { padding-left: 0; padding-right: 0.75rem; }
-[dir="rtl"] .pl-4 { padding-left: 0; padding-right: 1rem; }
-[dir="rtl"] .pr-1 { padding-right: 0; padding-left: 0.25rem; }
-[dir="rtl"] .pr-2 { padding-right: 0; padding-left: 0.5rem; }
-[dir="rtl"] .pr-3 { padding-right: 0; padding-left: 0.75rem; }
-[dir="rtl"] .pr-4 { padding-right: 0; padding-left: 1rem; }
+/* RTL: Navigation */
+[dir="rtl"] nav .flex.items-center.justify-between {
+  flex-direction: row-reverse;
+}
+
+/* RTL: Fix space-x gaps */
+[dir="rtl"] .space-x-1 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 0.25rem;
+  margin-left: 0;
+}
+
+[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 0.5rem;
+  margin-left: 0;
+}
+
+[dir="rtl"] .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 0.75rem;
+  margin-left: 0;
+}
+
+[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 1rem;
+  margin-left: 0;
+}
+
+/* RTL-specific margins */
+[dir="rtl"] .ml-auto { margin-left: 0; margin-right: auto; }
+[dir="rtl"] .mr-auto { margin-right: 0; margin-left: auto; }
 
 /* RTL-specific positioning */
 [dir="rtl"] .left-0 { left: auto; right: 0; }
 [dir="rtl"] .right-0 { right: auto; left: 0; }
-[dir="rtl"] .left-4 { left: auto; right: 1rem; }
-[dir="rtl"] .right-4 { right: auto; left: 1rem; }
-[dir="rtl"] .-left-4 { left: auto; right: -1rem; }
-[dir="rtl"] .-right-4 { right: auto; left: -1rem; }
 
 /* Slide animations for RTL */
 [dir="rtl"] .animate-slide-in-left {
@@ -259,4 +297,19 @@ body {
 
 [dir="rtl"] .animate-slide-in-right {
   animation: slideInLeft 0.6s ease-out forwards;
+}
+
+/* RTL: Fix specific component layouts */
+[dir="rtl"] .hero-content {
+  text-align: right;
+}
+
+/* RTL: Flex gap works, but ensure items align properly */
+[dir="rtl"] .gap-2,
+[dir="rtl"] .gap-3,
+[dir="rtl"] .gap-4,
+[dir="rtl"] .gap-6,
+[dir="rtl"] .gap-8,
+[dir="rtl"] .gap-10 {
+  /* Gap works automatically in RTL */
 }

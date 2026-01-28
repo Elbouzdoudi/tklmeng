@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "../i18n/useTranslation";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export default function Hero() {
   const { t } = useTranslation();
+  const { dir } = useLanguage();
+  const isRTL = dir === "rtl";
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -15,9 +18,9 @@ export default function Hero() {
   return (
     <section className="min-h-screen flex items-center pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-green-50/50 to-white overflow-hidden">
       <div className="max-w-6xl mx-auto w-full">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left: Content */}
-          <div className="text-center lg:text-left">
+        <div className={`grid lg:grid-cols-2 gap-12 items-center ${isRTL ? "direction-rtl" : ""}`}>
+          {/* Content */}
+          <div className={`text-center ${isRTL ? "lg:text-right lg:order-2" : "lg:text-left"}`}>
             {/* Badge */}
             <div
               className={`inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-medium mb-8 ${
@@ -42,7 +45,7 @@ export default function Hero() {
 
             {/* Subheadline */}
             <p
-              className={`text-lg sm:text-xl text-gray-600 max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed ${
+              className={`text-lg sm:text-xl text-gray-600 max-w-xl mx-auto ${isRTL ? "lg:mr-0 lg:ml-auto" : "lg:mx-0"} mb-10 leading-relaxed ${
                 isVisible ? "animate-fade-in-up delay-200" : "opacity-0"
               }`}
             >
@@ -51,7 +54,7 @@ export default function Hero() {
 
             {/* CTAs */}
             <div
-              className={`flex flex-col sm:flex-row gap-4 justify-center lg:justify-start ${
+              className={`flex flex-col sm:flex-row gap-4 justify-center ${isRTL ? "lg:justify-end" : "lg:justify-start"} ${
                 isVisible ? "animate-fade-in-up delay-300" : "opacity-0"
               }`}
             >
@@ -77,7 +80,7 @@ export default function Hero() {
 
             {/* Trust Indicators */}
             <div
-              className={`mt-12 flex flex-wrap justify-center lg:justify-start gap-6 text-gray-500 text-sm ${
+              className={`mt-12 flex flex-wrap justify-center ${isRTL ? "lg:justify-end" : "lg:justify-start"} gap-6 text-gray-500 text-sm ${
                 isVisible ? "animate-fade-in-up delay-400" : "opacity-0"
               }`}
             >
@@ -102,9 +105,9 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right: Hero Image */}
+          {/* Hero Image */}
           <div
-            className={`relative ${
+            className={`relative ${isRTL ? "lg:order-1" : ""} ${
               isVisible ? "animate-fade-in-up delay-200" : "opacity-0"
             }`}
           >
