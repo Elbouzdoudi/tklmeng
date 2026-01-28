@@ -1,17 +1,17 @@
 # Google Sheets Form Integration Setup
 
-This guide will help you connect the contact form to Google Sheets and receive email notifications.
+This guide will help you connect the registration form to Google Sheets and receive email notifications.
 
 ## Step 1: Create a Google Sheet
 
 1. Go to [Google Sheets](https://sheets.google.com)
 2. Create a new spreadsheet
-3. Name it "Takalam Inquiries" (or any name you prefer)
+3. Name it "Takalam Registrations" (or any name you prefer)
 4. In the first row, add these headers (exactly as shown):
 
-| A | B | C | D | E | F | G | H | I | J |
-|---|---|---|---|---|---|---|---|---|---|
-| Timestamp | First Name | Family Name | Phone | Email | Age | Sex | Country | City | Message |
+| A | B | C | D | E | F | G | H | I | J | K | L |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Timestamp | First Name | Family Name | Phone | Email | Age | Sex | Country | City | Package | Message | Payment Status |
 
 ## Step 2: Create the Google Apps Script
 
@@ -40,7 +40,9 @@ function doPost(e) {
       data.sex,
       data.country,
       data.city,
-      data.message || ''
+      data.package,
+      data.message || '',
+      data.paymentStatus || 'Pending'
     ]);
     
     // Send email notification
@@ -58,15 +60,20 @@ function doPost(e) {
 }
 
 function sendEmailNotification(data) {
-  const subject = `🎓 New Takalam Inquiry: ${data.firstName} ${data.familyName}`;
+  const subject = `🎓 New Registration: ${data.firstName} ${data.familyName} - ${data.package}`;
   
   const htmlBody = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <div style="background: #16a34a; padding: 20px; text-align: center;">
-        <h1 style="color: white; margin: 0;">New Student Inquiry</h1>
+        <h1 style="color: white; margin: 0;">New Student Registration</h1>
       </div>
       
       <div style="padding: 30px; background: #f9fafb;">
+        <div style="background: #dcfce7; border: 1px solid #16a34a; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+          <h3 style="color: #16a34a; margin: 0 0 5px 0;">📦 Package Selected</h3>
+          <p style="font-size: 18px; font-weight: bold; margin: 0; color: #1f2937;">${data.package}</p>
+        </div>
+        
         <h2 style="color: #1f2937; margin-top: 0;">Contact Information</h2>
         
         <table style="width: 100%; border-collapse: collapse;">
@@ -98,6 +105,14 @@ function sendEmailNotification(data) {
             <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Location:</td>
             <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">${data.city}, ${data.country}</td>
           </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Payment Status:</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">
+              <span style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 20px; font-size: 12px;">
+                ${data.paymentStatus || 'Awaiting screenshot'}
+              </span>
+            </td>
+          </tr>
         </table>
         
         ${data.message ? `
@@ -110,15 +125,20 @@ function sendEmailNotification(data) {
         <div style="margin-top: 30px; text-align: center;">
           <a href="https://wa.me/${data.phone.replace(/[^0-9]/g, '')}" 
              style="display: inline-block; background: #25D366; color: white; padding: 12px 24px; 
+                    text-decoration: none; border-radius: 25px; font-weight: bold; margin-right: 10px;">
+            📱 WhatsApp
+          </a>
+          <a href="mailto:${data.email}" 
+             style="display: inline-block; background: #3b82f6; color: white; padding: 12px 24px; 
                     text-decoration: none; border-radius: 25px; font-weight: bold;">
-            📱 Contact on WhatsApp
+            ✉️ Email
           </a>
         </div>
       </div>
       
       <div style="background: #1f2937; padding: 15px; text-align: center;">
         <p style="color: #9ca3af; margin: 0; font-size: 12px;">
-          This inquiry was submitted via the Takalam website
+          This registration was submitted via the Takalam website
         </p>
       </div>
     </div>
@@ -143,7 +163,9 @@ function testDoPost() {
         sex: 'Male',
         country: 'Morocco',
         city: 'Casablanca',
-        message: 'This is a test message'
+        package: 'Monthly Package - 2200 DHS',
+        message: 'This is a test message',
+        paymentStatus: 'Awaiting screenshot via WhatsApp'
       })
     }
   };
@@ -163,7 +185,7 @@ function testDoPost() {
    - **Execute as**: "Me (your email)"
    - **Who has access**: "Anyone"
 4. Click **Deploy**
-5. **Authorize** the app when prompted (click through the warnings)
+5. **Authorize** the app when prompted (click through the warnings - it's safe, it's your own script)
 6. **Copy the Web app URL** - it looks like:
    ```
    https://script.google.com/macros/s/AKfycby.../exec
@@ -172,7 +194,7 @@ function testDoPost() {
 ## Step 4: Update the Website
 
 1. Open `app/components/Contact.tsx`
-2. Find this line (around line 78):
+2. Find this line (around line 93):
    ```javascript
    const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
    ```
@@ -188,11 +210,34 @@ function testDoPost() {
 2. Check your Google Sheet for the new entry
 3. Check your email for the notification
 
+## What Gets Stored
+
+Each registration creates a row with:
+- **Timestamp** - When the form was submitted
+- **First Name** - Student's first name
+- **Family Name** - Student's family name
+- **Phone** - Phone number (with WhatsApp link in email)
+- **Email** - Email address
+- **Age** - Student's age
+- **Sex** - Male/Female/Prefer not to say
+- **Country** - Country of residence
+- **City** - City of residence
+- **Package** - Selected package (e.g., "Monthly Package - 2200 DHS")
+- **Message** - Any additional message
+- **Payment Status** - Initially "Awaiting screenshot via WhatsApp"
+
+## Updating Payment Status
+
+After receiving payment confirmation via WhatsApp:
+1. Open your Google Sheet
+2. Find the student's row
+3. Update the "Payment Status" column to "Paid" or "Confirmed"
+
 ## Troubleshooting
 
 ### Form not submitting?
-- Make sure the script URL is correct
-- Check browser console for errors
+- Make sure the script URL is correct (no extra spaces)
+- Check browser console for errors (F12 → Console)
 - Verify the script is deployed as "Anyone can access"
 
 ### Not receiving emails?
@@ -201,14 +246,23 @@ function testDoPost() {
 - Run the `testDoPost()` function in Apps Script to test
 
 ### Data not appearing in sheet?
-- Make sure the sheet name matches `SHEET_NAME` in the script
-- Check that headers are in row 1
+- Make sure the sheet name matches `SHEET_NAME` in the script (default: "Sheet1")
+- Check that all 12 headers are in row 1
+- Look at the Apps Script execution logs for errors
+
+### Need to update the script?
+1. Make your changes in Apps Script
+2. Click **Deploy** → **Manage deployments**
+3. Click the ✏️ edit icon
+4. Select "New version" from the dropdown
+5. Click **Deploy**
 
 ## Security Notes
 
 - The script URL is public but only accepts POST requests with specific data
 - All data is stored in your private Google Sheet
 - Emails are sent only to your specified address
+- No sensitive data is exposed
 
 ---
 
@@ -219,3 +273,4 @@ function testDoPost() {
 | Email | takalamenglishcenter@gmail.com |
 | Sheet Name | Sheet1 |
 | Timezone | Africa/Casablanca |
+| Headers | Timestamp, First Name, Family Name, Phone, Email, Age, Sex, Country, City, Package, Message, Payment Status |

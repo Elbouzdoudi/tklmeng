@@ -29,39 +29,43 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-white/95 backdrop-blur-sm shadow-sm"
-          : "bg-transparent"
+          ? "bg-white/95 backdrop-blur-md shadow-sm"
+          : "bg-white"
       }`}
     >
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center group -my-16">
+          <a href="#" className="flex-shrink-0">
             <Image
               src="/logo.png"
-              alt="TAKALAM - The Moroccan English Center"
-              width={700}
-              height={180}
-              className="h-48 w-auto transition-transform group-hover:scale-105 object-contain"
+              alt="TAKALAM"
+              width={220}
+              height={55}
+              className="h-12 w-auto"
               priority
             />
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-10">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="text-gray-600 hover:text-green-600 transition-colors text-sm font-medium"
+                className="text-gray-600 hover:text-green-600 transition-colors text-[15px] font-medium"
               >
                 {link.label}
               </a>
             ))}
+          </div>
+
+          {/* Right Side - Language + CTA */}
+          <div className="hidden md:flex items-center gap-4">
             <LanguageSwitcher />
             <a
               href="#contact"
-              className="btn-primary bg-green-600 text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-green-700"
+              className="bg-green-600 text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors shadow-sm"
             >
               {t("header.getStarted")}
             </a>
@@ -101,24 +105,24 @@ export default function Header() {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-100 py-4 animate-fade-in">
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
-                  className="text-gray-600 hover:text-green-600 transition-colors px-4 py-2"
+                  className="text-gray-600 hover:text-green-600 hover:bg-gray-50 transition-colors px-4 py-3 rounded-lg"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.label}
                 </a>
               ))}
-              <div className="px-4 py-2">
+              <div className="px-4 py-3 border-t border-gray-100 mt-2">
                 <LanguageSwitcher />
               </div>
               <div className="px-4 pt-2">
                 <a
                   href="#contact"
-                  className="block text-center btn-primary bg-green-600 text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-green-700"
+                  className="block text-center bg-green-600 text-white px-5 py-3 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {t("header.getStarted")}
