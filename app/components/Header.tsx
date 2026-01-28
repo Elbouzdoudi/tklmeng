@@ -52,7 +52,7 @@ export default function Header() {
           </a>
 
           {/* Desktop Navigation */}
-          <div className={`hidden md:flex items-center gap-10 ${isRTL ? "flex-row-reverse" : ""}`}>
+          <div className={`hidden md:flex items-center gap-10 mx-auto ${isRTL ? "flex-row-reverse" : ""}`}>
             {navLinks.map((link) => (
               <a
                 key={link.href}
