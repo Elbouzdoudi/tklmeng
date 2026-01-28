@@ -107,17 +107,7 @@ export default function Contact() {
         paymentStatus: 'Awaiting screenshot via WhatsApp'
       };
 
-      // Check if Google Script URL is configured
-      if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL') {
-        // Fallback to Web3Forms if Google Script not configured
-        const WEB3FORMS_KEY = '856ea9c9-fd68-42e0-b493-76c3d6d51713';
-        
-        const formDataToSend = new FormData();
-        formDataToSend.append('access_key', WEB3FORMS_KEY);
-        formDataToSend.append('subject', `New Registration: ${formData.firstName} ${formData.familyName} - ${selectedPackage?.name || 'Package'}`);
-        formDataToSend.append('from_name', 'Takalam Website');
-        formDataToSend.append('First Name', formData.firstName);
-        formDataToSend.append('Family Name', formData.familyName);
+      // ...existing code...
         formDataToSend.append('Phone', formData.phone);
         formDataToSend.append('Email', formData.email);
         formDataToSend.append('Age', formData.age);
